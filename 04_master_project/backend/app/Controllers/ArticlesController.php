@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ArticlesController {
   function index(Request $request) {
-    $query = Article::query();
+    $query = Article::with(['tags', 'images']); // Eager load tags and images
 
     // filter by id
     $id = $request->input('id');
@@ -25,13 +25,13 @@ class ArticlesController {
     // filter by tags
     $tagIds = $request->input('tag_ids');
     if ($tagIds) {
-      $tagIds = explode(',', $tagIds);
-      $query->whereHas(
-        'tags',
-        fn($q) => $q->whereIn('tag_id', $tagIds),
-        '>=',
-        count($tagIds)
-      );
+        $tagIds = explode(',', $tagIds);
+        $query->whereHas(
+            'tags',
+            fn($q) => $q->whereIn('tag_id', $tagIds),
+            '>=',
+            count($tagIds)
+        );
     }
 
     // order
@@ -45,9 +45,9 @@ class ArticlesController {
     if ($limit) $query->limit($limit);
     if ($offset) $query->offset($offset);
 
-    // return $query->toSql();
+    // return the results
     return $query->get();
-  }
+}
 
   function create(Request $request) {
     $payload = Article::validate($request);
