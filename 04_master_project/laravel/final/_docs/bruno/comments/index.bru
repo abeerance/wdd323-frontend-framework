@@ -1,0 +1,16 @@
+meta {
+  name: index
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/comments
+  body: none
+  auth: none
+}
+
+query {
+  ~user_id: 1
+  ~article_id: 1
+}

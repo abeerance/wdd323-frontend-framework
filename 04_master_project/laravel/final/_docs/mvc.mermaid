@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant V as View
+    participant R as Router
+    participant C as Controller
+    participant M as Model
+    participant D as Database
+    participant MG as Migration
+    V ->> R: GET /articles
+    R ->> C: ArticlesController->index()
+    C ->> M: Articles::all()
+    M ->> D: SELECT * FROM articles
+    D ->> M: Rows
+    M ->> C: Objects
+    C ->> V: JSON
+    MG -->> D: CREATE TABLE articles

@@ -1,0 +1,17 @@
+meta {
+  name: reverse
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/examples/reverse
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": "hello"
+  }
+}

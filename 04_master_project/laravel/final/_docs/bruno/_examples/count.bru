@@ -1,0 +1,17 @@
+meta {
+  name: count
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/examples/count
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "text": "lorem ipsum dolor"
+  }
+}

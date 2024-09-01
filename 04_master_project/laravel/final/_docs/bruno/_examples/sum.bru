@@ -1,0 +1,17 @@
+meta {
+  name: sum
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/examples/sum
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "numbers": [1, 2, 3, 4]
+  }
+}

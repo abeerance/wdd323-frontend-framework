@@ -1,0 +1,22 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/comments
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "id": 21,
+    "text": "changed comment"
+  }
+}

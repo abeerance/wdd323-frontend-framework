@@ -1,0 +1,21 @@
+meta {
+  name: destroy
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/comments
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "id": 1
+  }
+}

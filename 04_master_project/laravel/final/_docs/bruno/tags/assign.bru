@@ -1,0 +1,22 @@
+meta {
+  name: assign
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/tags/assign
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "article_id": 1,
+    "tag_ids": [1,2,3]
+  }
+}

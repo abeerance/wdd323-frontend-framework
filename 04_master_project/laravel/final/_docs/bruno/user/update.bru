@@ -1,0 +1,22 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/user
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "email": "alpha2@mailinator.com",
+    "password": "password"
+  }
+}

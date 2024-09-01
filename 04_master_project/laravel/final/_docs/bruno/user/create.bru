@@ -1,0 +1,18 @@
+meta {
+  name: create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/user
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "neo@mailinator.com",
+    "password": "password"
+  }
+}

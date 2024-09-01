@@ -1,0 +1,22 @@
+meta {
+  name: index
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/articles
+  body: none
+  auth: none
+}
+
+query {
+  ~id: 1
+  ~user_id: 1
+  ~order_by: id
+  ~order_dir: desc
+  ~title: bravo
+  ~limit: 2
+  ~offset: 1
+  ~tag_ids: 1,2,3
+}
