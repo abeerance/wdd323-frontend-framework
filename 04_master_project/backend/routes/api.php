@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
   Route::put('/tags/assign', [TagsController::class, 'assign']);
 
   Route::post('/uploads/{article_id}', [UploadsController::class, 'create']);
-  Route::delete('/uploads', [UploadsController::class, 'destroy']);
+  Route::delete('/uploads/{id}', [UploadsController::class, 'destroy']);
 
   Route::post('/mails/send', [MailsController::class, 'send']);
 });
