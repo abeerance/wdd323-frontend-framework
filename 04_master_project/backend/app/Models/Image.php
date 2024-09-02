@@ -11,12 +11,6 @@ class Image extends Model
 
     protected $fillable = [
         'pathname',
-        'article_id',
         'user_id',
     ];
-
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
 }

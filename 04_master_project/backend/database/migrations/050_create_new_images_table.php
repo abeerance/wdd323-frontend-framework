@@ -9,10 +9,9 @@ return new class extends Migration {
         // Create the images table
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('pathname')->unique();
-            $table->foreignId('article_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->timestamps(); 
+            $table->string('pathname')->unique(); // Unique constraint for the pathname
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // User ID is required
+            $table->timestamps();
         });
     }
 

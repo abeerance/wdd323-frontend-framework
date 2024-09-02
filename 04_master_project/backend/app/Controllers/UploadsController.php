@@ -9,40 +9,50 @@ use Illuminate\Support\Str;
 use App\Models\Image;
 
 class UploadsController {
-    function create(Request $request, $article_id) {
+    function index(Request $request) {
+        $user = Auth::user();
+        $images = Image::where('user_id', $user->id)->get();
+        return response()->json($images);
+    }
+
+    function create(Request $request) {
         $user = Auth::user(); // Get the authenticated user
 
-        // Validate the file input only, no need to validate user_id
+        // Validate that the input contains between 1 and 5 files
         $request->validate([
-            'file' => ['required', 'file', 'max:2048'], // Validate file
+            'files.*' => ['required', 'file', 'max:5120'], // Validate each file
+            'files' => ['required', 'array', 'max:5'], // Ensure there are at most 5 files
         ]);
 
-        $file = $request->file('file');
+        $uploadedImages = [];
 
-        // Get the original filename and extension
-        $originalFilename = $file->getClientOriginalName();
-        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $extension = $file->getClientOriginalExtension();
+        foreach ($request->file('files') as $file) {
+            // Get the original filename and extension
+            $originalFilename = $file->getClientOriginalName();
+            $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
 
-        // Generate a unique filename using a random string
-        $uniqueFilename = $filename . '_' . Str::random(16) . '.' . $extension;
-        $pathname = 'uploads/' . $user->id . '/' . $uniqueFilename;
+            // Generate a unique filename using a random string
+            $uniqueFilename = $filename . '_' . Str::random(16) . '.' . $extension;
+            $pathname = 'uploads/' . $user->id . '/' . $uniqueFilename;
 
-        // Store the file with the unique pathname
-        Storage::putFileAs(
-            'uploads/' . $user->id,
-            $file,
-            $uniqueFilename
-        );
+            // Store the file with the unique pathname
+            Storage::putFileAs(
+                'uploads/' . $user->id,
+                $file,
+                $uniqueFilename
+            );
 
-        // Save the file information in the database
-        Image::create([
-            'pathname' => $pathname,
-            'article_id' => $article_id,
-            'user_id' => $user->id, // Associate the image with the user
-        ]);
+            // Save the file information in the database
+            $image = Image::create([
+                'pathname' => $pathname,
+                'user_id' => $user->id, // Associate the image with the user
+            ]);
 
-        return response()->json(['pathname' => $pathname, 'article_id' => $article_id, 'user_id' => $user->id], 201);
+            $uploadedImages[] = $image;
+        }
+
+        return response()->json(['images' => $uploadedImages], 201);
     }
 
     function destroy(Request $request, $id) {

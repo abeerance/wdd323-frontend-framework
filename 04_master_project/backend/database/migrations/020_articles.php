@@ -9,12 +9,13 @@ return new class extends Migration {
     Schema::create('articles', function (Blueprint $table) {
       $table->id();
       $table->string('title');
-      $table->text('content');
+      $table->json('content'); // Store the JSON content here
       $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+      $table->foreignId('image_id')->nullable()->constrained('images')->cascadeOnDelete(); // Allow null for cover_image_id
       $table->timestamp('created_at');
       $table->timestamp('updated_at');
-    });
-  }
+  });
+}
 
   function down() {
     Schema::dropIfExists('articles');

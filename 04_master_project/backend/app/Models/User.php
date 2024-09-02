@@ -23,6 +23,11 @@ class User extends Model {
     return $this->hasMany(Comment::class);
   }
 
+  function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
   static function validate(Request $request, $userId = null) {
     $post = $request->method() === 'POST';
     return $request->validate([
