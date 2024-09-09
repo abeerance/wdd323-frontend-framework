@@ -47,3 +47,41 @@ let c2: Color = Color.BLUE; // c2 is now a Color.BLUE with the value of "blue"
 let colorName: string = Color.GREEN; // colorName is now a string with the value of "green"
 // Enums allow you to define a set of named constants
 // by default, enums are numeric, starting at 0, but you can assign different values to each constant
+
+// 7. any
+// The any type is a powerful way to describe types, but rather don't use it, because
+// it is too broad and it will disable type checking of typescript.
+let notSure: any = 4; // number
+notSure = "hello"; // here the type inference will automatically put the variable into a string type
+notSure = { color: "blue" }; // now it is an object
+
+// 8. Void
+// The void type is used for functions that do not return a value
+function warnUser() {
+  console.log("This function does not return a value");
+  // return 42; // this will cause a compiler error, because we can't return anything from the void function
+}
+
+// Explanation: The void type is commonly used for functions that perform
+// an action but do not return a value. For example, a function that logs a message to the console
+
+// 9. null und undefined
+// TypeScript has two special types: null and undefined.
+// They have their respective values: null = null and undefined = undefined.
+// The null type is used to represent the absence of a value
+// while the undefined type is used to represent a variable that has not been assigned a value.
+let u1: undefined = undefined; // Explicitly setting the undefined
+let u2: null = null; // Explicitly setting the null
+// u1 = null; // a undefine variable can not assigne a null value
+// u2 = undefined; // an undefined variable can not assigne a null value
+let canBeNullOrUndefiend: string | null | undefined = "hello";
+canBeNullOrUndefiend = null; // canBeNullOrUndefiend is now null
+canBeNullOrUndefiend = undefined; // canBeNullOrUndefiend is now undefined
+
+// 10. Objects
+// the object type represents any non-primitive type.
+// that means it's neither a string, number, boolean, symbol, nor null or undefined.
+let obj: {} = { name: "John" };
+let obj2: object = { surname: "Doe" };
+// let obj3: { name: string; age: number } = { name: "John", age: 25, surname: "Doe" }; // this is not possible, because surname doesn't exist
+let obj4: { name: string; age: number } = { name: "John", age: 25 };
