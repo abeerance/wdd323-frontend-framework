@@ -85,3 +85,14 @@ let obj: {} = { name: "John" };
 let obj2: object = { surname: "Doe" };
 // let obj3: { name: string; age: number } = { name: "John", age: 25, surname: "Doe" }; // this is not possible, because surname doesn't exist
 let obj4: { name: string; age: number } = { name: "John", age: 25 };
+
+// 11. Union Types
+// Union types allow you to combine multiple types into a single type.
+// A variable with a union type can hold a value of any of the types specified in the union.
+let id: number | string;
+id = 101; // id is now a number
+id = "asd293-asd92-asd"; // id is now a string
+
+// Union types are a powerful way to combine multiple types into a single type.
+// For example, in a web form, the input can be either a string or a number
+// TypeScript will enforce that the value assignied to a union type mathers one of the types in the union

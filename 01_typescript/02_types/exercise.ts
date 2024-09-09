@@ -54,3 +54,57 @@ Then, create a variable of type Library and initialize it with appropriate value
 
 Hint: Use array methods to search for the book title within the books array.
 */
+
+type Book = {
+  title: string;
+  author: string;
+  isAvailable: boolean;
+};
+
+type Library = {
+  name: string;
+  location: string;
+  books: Book[];
+};
+
+const imagineLibrary: Library = {
+  name: "Imagine Library",
+  location: "Zurich",
+  books: [
+    { title: "1984", author: "George Orwell", isAvailable: true },
+    { title: "To Kill a Mockingbird", author: "Harper Lee", isAvailable: false },
+    { title: "The Great Gatsby", author: "F. Scott Fitzgerald", isAvailable: true },
+  ],
+};
+
+function isBookAvailable(library: Library, bookTitle: string): boolean {
+  const book = library.books.find((book) => book.title === bookTitle);
+  // if (book) {
+  //   if (book.isAvailable) {
+  //     return true;
+  //   } else {
+  //     false;
+  //   }
+  // }
+  // is the same as the if/else statement above
+  return book ? book.isAvailable : false;
+}
+
+console.log("Available status: ", isBookAvailable(imagineLibrary, "1984")); //  returns in the console: Available status: true
+console.log("Available status: ", isBookAvailable(imagineLibrary, "To Kill a MockingBorder")); // returns in the console: Available status: false
+
+/*
+Create a type Team that represents a sports team. It should contain:
+
+	•	teamName (string)
+	•	members (array of objects): Each object should represent a team member and contain:
+	•	name (string)
+	•	position (string)
+	•	isActive (boolean)
+	•	addMember (function): A method that takes a new member (object) and adds it to the members array.
+	•	listActiveMembers (function): A method that returns an array of names of the active team members.
+
+Create an instance of Team and demonstrate adding a new member and listing all active members.
+
+Hint: Use TypeScript’s push method for arrays and filter for listing active members.
+*/
