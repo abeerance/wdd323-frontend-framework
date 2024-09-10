@@ -108,3 +108,34 @@ Create an instance of Team and demonstrate adding a new member and listing all a
 
 Hint: Use TypeScript’s push method for arrays and filter for listing active members.
 */
+
+type TeamMember = {
+  name: string;
+  position: string;
+  isActive: boolean;
+};
+
+type Team = {
+  teamName: string;
+  members: TeamMember[];
+  addMember: (member: TeamMember) => void;
+  listActiveMembers: () => string[];
+};
+
+const soccerTeam: Team = {
+  teamName: "Wild Tigers",
+  members: [
+    { name: "Alice", position: "Forward", isActive: true },
+    { name: "Bob", position: "Goalkeeper", isActive: false },
+    { name: "Charlie", position: "Defender", isActive: true },
+  ],
+  addMember(member: TeamMember) {
+    this.members.push(member);
+  },
+  listActiveMembers() {
+    return this.members.filter((member) => member.isActive).map((member) => member.name);
+  },
+};
+
+soccerTeam.addMember({ name: "David", position: "Defender", isActive: true });
+console.log(soccerTeam.listActiveMembers()); // output: ["Alice", "Charlie", "David"]
