@@ -1,0 +1,65 @@
+.card {
+  border-radius: 10px;
+  min-height: 200px;
+  background-image: linear-gradient(90deg, #330867 0%, #30cfd0 100%);
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 2fr 1fr;
+  padding: 40px;
+}
+
+.card__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.card__description {
+  color: #fff;
+  margin-top: 20px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card__buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.card__paragraph--bold {
+  font-weight: 700;
+}
+
+.violet {
+  color: violet;
+}
+
+.darkred {
+  color: #741313;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.darkgreen {
+  color: darkgreen;
+}
+
+.blue {
+  color: blue;
+}
+
+.black {
+  color: black;
+}
