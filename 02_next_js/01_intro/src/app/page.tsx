@@ -6,7 +6,6 @@ export default function Home() {
     <div className={styles["page__container"]}>
       <h1 className={styles["page__title"]}>Hello My very first React App</h1>
       <h2 className={styles["page__subtitle"]}>This will be a simple click counter</h2>
-
       {BlogArticles.map((blog) => (
         <CardWithImage
           key={blog.slug}
