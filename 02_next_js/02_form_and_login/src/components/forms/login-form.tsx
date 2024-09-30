@@ -1,36 +1,43 @@
 "use client";
 
-import { SessionForm } from "@/app/(unauthenticated)/session/page";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { TextInput } from "../common/text-input";
-import { FormWrapper } from "./form-wrapper";
 import { Button } from "../common/button";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { SessionForm } from "@/app/(unauthenticated)/session/page";
 
 interface LoginFormProps {
   setForm: Dispatch<SetStateAction<SessionForm>>;
 }
 
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
+
 export const LoginForm = ({ setForm }: LoginFormProps) => {
-  const [loginDetails, setLoginDetails] = useState({
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormInputs>();
+
+  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
+    console.log(data);
+  };
 
   return (
-    <FormWrapper>
-      <TextInput
+    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col w-full'>
+      <input
+        {...register("email", { required: "Email is required" })}
         placeholder='E-mail'
-        name='email'
-        type='email'
-        onChange={(e) => setLoginDetails({ ...loginDetails, email: e.target.value })}
-        className='mb-6'
+        className='mb-6 p-2 w-full rounded-md border border-gray-600'
       />
-      <TextInput
+      {errors.email && <p className='text-red-600 -mt-5 text-sm mb-4 '>{errors.email.message}</p>}
+      <input
+        {...register("password")}
         placeholder='Password'
-        name='password'
-        type='password'
-        onChange={(e) => setLoginDetails({ ...loginDetails, password: e.target.value })}
-        className='mb-6'
+        className='mb-6 p-2 w-full rounded-md border border-gray-600'
       />
       <div className='flex gap-1 justify-end'>
         <p>Don&apos;t have an account?</p>
@@ -38,13 +45,7 @@ export const LoginForm = ({ setForm }: LoginFormProps) => {
           Register now
         </Button>
       </div>
-      <Button
-        onClick={() => {
-          console.log(loginDetails);
-        }}
-      >
-        Login
-      </Button>
-    </FormWrapper>
+      <Button type='submit'>Login</Button>
+    </form>
   );
 };

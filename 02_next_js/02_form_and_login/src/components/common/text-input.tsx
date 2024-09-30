@@ -4,13 +4,21 @@ import { useState } from "react";
 
 interface TextInputProps {
   placeholder: string;
-  name: string;
+  name?: string;
   type: string;
+  value?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 }
 
-export const TextInput = ({ placeholder, name, type, onChange, className }: TextInputProps) => {
+export const TextInput = ({
+  placeholder,
+  name,
+  type,
+  value,
+  onChange,
+  className,
+}: TextInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -21,6 +29,7 @@ export const TextInput = ({ placeholder, name, type, onChange, className }: Text
         type={type === "password" && showPassword ? "text" : type}
         name={name}
         placeholder={placeholder}
+        value={value}
         onChange={onChange}
         className='w-full h-full p-2'
       />
