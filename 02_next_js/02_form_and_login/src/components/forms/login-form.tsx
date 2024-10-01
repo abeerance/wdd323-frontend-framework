@@ -1,7 +1,6 @@
 "use client";
 
 import { Dispatch, SetStateAction } from "react";
-import { TextInput } from "../common/text-input";
 import { Button } from "../common/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SessionForm } from "@/app/(unauthenticated)/session/page";
