@@ -1,11 +1,13 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "../common/button";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { SessionForm } from "@/app/(unauthenticated)/session/page";
 import { FormWrapper } from "./form-wrapper";
 import { TextInput } from "../common/text-input";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   setForm: Dispatch<SetStateAction<SessionForm>>;
@@ -17,10 +19,29 @@ interface LoginFormInputs {
 }
 
 export const LoginForm = ({ setForm }: LoginFormProps) => {
+  const router = useRouter();
   const methods = useForm<LoginFormInputs>();
+  const [error, setError] = useState<string | null>(null); // state for error handling
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log(data);
+  console.log(error);
+
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    // we define here, that we will use next-auth's handleLogin
+    // the handleLogin function of next-auth is called signIn()
+    const result = await signIn("credentials", {
+      redirect: false, // prevents the automatic redirect
+      email: data.email,
+      password: data.password,
+    });
+
+    // handle success of error based on the result
+    if (result?.error) {
+      setError("Login failed, please try again");
+      console.error(result.error);
+    } else {
+      console.log("Login successful, ", result);
+      router.push("/dashboard");
+    }
   };
 
   return (
