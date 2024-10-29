@@ -21,8 +21,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  // modal is needed here for the parallel route, so that we can render the modal in the layout
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang='en'>
@@ -30,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] antialiased p-16`}
       >
         {children}
+        {modal}
       </body>
     </html>
   );
