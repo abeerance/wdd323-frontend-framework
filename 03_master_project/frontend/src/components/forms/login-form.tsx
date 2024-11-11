@@ -4,16 +4,17 @@ import { z } from "zod";
 import { Button } from "../ui/button/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import { Form, FormField } from "../ui/form";
 import { Input } from "../ui/input";
 import { FormContext } from "@/app/session/page";
+import { FormInput } from "./form-input";
 
 interface LoginFormProps {
   setFormContext: (context: FormContext) => void;
 }
 
 const loginFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email("Please enter a valid email address."),
   password: z
     .string()
     .min(4, {
@@ -31,7 +32,11 @@ export const LoginForm = ({ setFormContext }: LoginFormProps) => {
       email: "",
       password: "",
     },
+    mode: "onSubmit",
+    reValidateMode: "onBlur",
   });
+
+  const { errors } = form.formState;
 
   function onSubmit(values: z.infer<typeof loginFormSchema>) {
     console.log(values);
@@ -45,24 +50,18 @@ export const LoginForm = ({ setFormContext }: LoginFormProps) => {
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder='Email' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <FormInput errors={errors}>
+                <Input placeholder='Email' {...field} />
+              </FormInput>
             )}
           />
           <FormField
             control={form.control}
             name='password'
             render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type='password' placeholder='Password' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <FormInput errors={errors}>
+                <Input type='password' placeholder='Password' {...field} />
+              </FormInput>
             )}
           />
           <Button type='submit' size='lg'>

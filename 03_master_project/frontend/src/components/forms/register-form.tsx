@@ -1,17 +1,20 @@
+"use client";
+
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem } from "../ui/form";
+import { Form, FormField } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button/button";
 import { FormContext } from "@/app/session/page";
+import { FormInput } from "./form-input";
 
 interface RegisterFormProps {
   setFormContext: (context: FormContext) => void;
 }
 
 const registerFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email("Please enter a valid email address."),
   password: z
     .string()
     .min(4, {
@@ -29,7 +32,11 @@ export const RegisterForm = ({ setFormContext }: RegisterFormProps) => {
       email: "",
       password: "",
     },
+    mode: "onSubmit",
+    reValidateMode: "onBlur",
   });
+
+  const { errors } = form.formState;
 
   function onSubmit(values: z.infer<typeof registerFormSchema>) {
     console.log(values);
@@ -43,22 +50,18 @@ export const RegisterForm = ({ setFormContext }: RegisterFormProps) => {
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder='Email' {...field} />
-                </FormControl>
-              </FormItem>
+              <FormInput errors={errors}>
+                <Input placeholder='Email' {...field} />
+              </FormInput>
             )}
           />
           <FormField
             control={form.control}
             name='password'
             render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type='password' placeholder='Password' {...field} />
-                </FormControl>
-              </FormItem>
+              <FormInput errors={errors}>
+                <Input type='password' placeholder='Password' {...field} />
+              </FormInput>
             )}
           />
           <Button type='submit' size='lg'>
