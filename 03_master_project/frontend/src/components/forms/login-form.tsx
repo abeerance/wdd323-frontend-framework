@@ -1,13 +1,13 @@
 "use client";
 
 import { z } from "zod";
-import { Button } from "../ui/button/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "../ui/form";
 import { Input } from "../ui/input";
-import { FormContext } from "@/app/session/page";
 import { FormInput } from "./form-input";
+import { Button } from "../ui/button";
+import { FormContext } from "@/types/enums/form-context";
 
 interface LoginFormProps {
   setFormContext: (context: FormContext) => void;

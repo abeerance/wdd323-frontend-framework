@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button/button";
-import { FormContext } from "@/app/session/page";
+import { Button } from "../ui/button";
 import { FormInput } from "./form-input";
+import { FormContext } from "@/types/enums/form-context";
 
 interface RegisterFormProps {
   setFormContext: (context: FormContext) => void;

@@ -1,6 +1,6 @@
 import dataFetch from "@/lib/data-fetch";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { ArticleData } from "@/app/page";
 
 // simulate delay funciton

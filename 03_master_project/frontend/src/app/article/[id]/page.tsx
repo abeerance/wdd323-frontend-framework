@@ -13,7 +13,7 @@ async function getArticleDetail(id: number) {
 
 // the params are being fetched from the router
 // in this example we are on the route http://localhost:3000/article/1
-export default async function ArticlePage({ params }: { params: { id: number } }) {
+export default async function ArticlePage({ params }: { params: Promise<{ id: number }> }) {
   // here we await the id from the params
   // we need to await it, so there is no hydration error
   const { id } = await params;
