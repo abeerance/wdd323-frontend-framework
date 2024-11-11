@@ -21,11 +21,11 @@ export default async function ArticleList() {
   const articles = await getArticles();
 
   return (
-    <div className='flex flex-col items-center justify-center gap-6'>
-      {articles.slice(0, 3).map((article: ArticleData) => (
+    <>
+      {articles.map((article: ArticleData) => (
         // here we use the Link Component from next.js
         // to enable routing whenever we click on an article
-        <Link key={article.id} href={`/article/${article.id}`} className='w-full max-w-[400px] '>
+        <Link key={article.id} href={`/article/${article.id}`} className='w-full'>
           <Card>
             <CardHeader>
               <CardTitle>{article.title}</CardTitle>
@@ -34,6 +34,6 @@ export default async function ArticleList() {
           </Card>
         </Link>
       ))}
-    </div>
+    </>
   );
 }

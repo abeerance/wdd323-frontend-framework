@@ -1,6 +1,6 @@
 import ArticleList from "@/components/article-list/article-list";
-import ArticleList2 from "@/components/article-list/article-list2";
-import { Suspense, use } from "react";
+import { ArticleListSkeleton } from "@/components/skeletons/article-list-skeleton";
+import { Suspense } from "react";
 
 export interface ArticleData {
   id: number;
@@ -17,19 +17,12 @@ export interface ArticleData {
 export default async function Home() {
   return (
     <div>
-      <h1 className='text-2xl font-bold mb-3'>Not inside the Suspense Boundary</h1>
-      <Suspense
-        fallback={<div className='w-full h-full flex items-center justify-center'>Loading...</div>}
-      >
-        <ArticleList />
-      </Suspense>
-      <Suspense
-        fallback={
-          <div className='w-full h-full flex items-center justify-center'>Loading... article 2</div>
-        }
-      >
-        <ArticleList2 />
-      </Suspense>
+      <h1 className='text-2xl font-bold mb-10'>Not inside the Suspense Boundary</h1>
+      <div className='flex flex-col gap-6'>
+        <Suspense fallback={<ArticleListSkeleton />}>
+          <ArticleList />
+        </Suspense>
+      </div>
     </div>
   );
 }
