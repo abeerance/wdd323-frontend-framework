@@ -3,6 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Header } from "@/components/header/header";
 import { Footer } from "@/components/footer/footer";
+import { Toaster } from "@/components/ui/sonner";
+import { Session } from "next-auth";
+import { SessionProviderWrapper } from "@/session/session-provider-wrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,21 +28,26 @@ export default function RootLayout({
   children,
   // modal is needed here for the parallel route, so that we can render the modal in the layout
   modal,
+  session,
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
+  session: Session;
 }>) {
   return (
     <html lang='en'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-[family-name:var(--font-geist-sans)] antialiased min-h-screen flex flex-col`}
       >
-        <Header />
-        <div className='flex-grow px-16 py-10'>
-          {children}
-          {modal}
-        </div>
-        <Footer />
+        <SessionProviderWrapper session={session}>
+          <Header />
+          <div className='flex-grow px-16 py-10'>
+            {children}
+            {modal}
+          </div>
+          <Footer />
+          <Toaster />
+        </SessionProviderWrapper>
       </body>
     </html>
   );

@@ -8,6 +8,9 @@ import { Input } from "../ui/input";
 import { FormInput } from "./form-input";
 import { Button } from "../ui/button";
 import { FormContext } from "@/types/enums/form-context";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   setFormContext: (context: FormContext) => void;
@@ -26,6 +29,7 @@ const loginFormSchema = z.object({
 });
 
 export const LoginForm = ({ setFormContext }: LoginFormProps) => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -38,8 +42,22 @@ export const LoginForm = ({ setFormContext }: LoginFormProps) => {
 
   const { errors } = form.formState;
 
-  function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof loginFormSchema>) {
+    // we define here, that we will use next-auth's handleLogin
+    // the handleLogin function of next-auth is called signIn()
+    const result = await signIn("credentials", {
+      redirect: false, // prevents the automatic redirect
+      email: values.email,
+      password: values.password,
+    });
+
+    // handle success of error based on the result
+    if (result?.error) {
+      toast.error("Login failed, please try again", { position: "bottom-center" });
+    } else {
+      toast.success("Login successful", { position: "bottom-center" });
+      router.push("/");
+    }
   }
 
   return (

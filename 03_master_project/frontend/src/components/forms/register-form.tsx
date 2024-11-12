@@ -8,6 +8,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormInput } from "./form-input";
 import { FormContext } from "@/types/enums/form-context";
+import { handleSignup } from "@/actions/auth-actions";
+import { toast } from "sonner";
 
 interface RegisterFormProps {
   setFormContext: (context: FormContext) => void;
@@ -38,8 +40,15 @@ export const RegisterForm = ({ setFormContext }: RegisterFormProps) => {
 
   const { errors } = form.formState;
 
-  function onSubmit(values: z.infer<typeof registerFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
+    const response = await handleSignup(values.email, values.password);
+
+    if (response.status === 201) {
+      toast.success("Signup successful, you can login now", { position: "bottom-center" });
+      setFormContext(FormContext.LOGIN);
+    } else {
+      toast.error(response.message, { position: "bottom-center" });
+    }
   }
 
   return (
