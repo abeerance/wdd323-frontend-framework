@@ -11,6 +11,7 @@ interface TextInputProps {
   required?: boolean; // whether the input is required
   className?: string; // optional className for the input field
   validateAs?: "email" | "password" | "text"; // optional validation for the input field
+  error?: boolean;
 }
 
 export const TextInput = ({

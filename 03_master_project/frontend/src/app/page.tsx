@@ -12,12 +12,16 @@ export interface ArticleData {
   updated_at: string;
   tags: string[];
   coverImageId: string | null;
+  cover_image: {
+    id: number;
+    pathname: string;
+  };
 }
 
 export default async function Home() {
   return (
     <div>
-      <h1 className='text-2xl font-bold mb-10'>Not inside the Suspense Boundary</h1>
+      <h1 className='text-2xl font-bold mb-10'>Our latest articles</h1>
       <div className='flex flex-col gap-6'>
         <Suspense fallback={<ArticleListSkeleton />}>
           <ArticleList />
