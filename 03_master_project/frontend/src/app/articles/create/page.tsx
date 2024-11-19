@@ -51,9 +51,17 @@ export default function CreateArticlePage() {
     }
 
     // call the handleImageUpload function
-    const uploadedImage = await handleImageUpload();
+    const uploadedImageResponse = await handleImageUpload();
 
-    console.log(uploadedImage);
+    // extract the image ID from the uploaded image data
+    const imageId = uploadedImageResponse?.images[0].id;
+
+    // create a payload to send to the backend server
+    const payload = {
+      title, // article title
+      content: editorContent, // the current state of the editorContant
+      image_id: imageId, // the ID of the uploaded image
+    };
   };
 
   return (
