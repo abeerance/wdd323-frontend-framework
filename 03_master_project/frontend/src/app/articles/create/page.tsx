@@ -25,6 +25,7 @@ export default function CreateArticlePage() {
 
     // prepare the file to be sent using FormData
     const formData = new FormData();
+    formData.append("title", title);
     formData.append("files[]", coverImage);
 
     try {

@@ -17,18 +17,26 @@ class UploadsController {
     }
 
     function create(Request $request) {
-        Log::info($request->all());
         $user = Auth::user(); // Get the authenticated user
 
-        // Validate that the input contains between 1 and 5 files
         $request->validate([
-            'title' => ['string', 'max:255'], // Validate title as required text
             'files.*' => ['required', 'file', 'max:5120'], // Validate each file in the array
-            'files' => ['required', 'array', 'max:5'], // Ensure files is an array with at most 5 items
+            'files' => ['required', 'array', 'max:5'], // Ensure files is an array
         ]);
 
+        // FORMDATA: this is needed, so that we can access the title of the article
+        $title = $request->post('title'); 
+
+        // for example, if the formdata has a description key, we need to do it like this, so we can access the content of the key
+        // $description = $request->post('description');
+
+        // Validation of the title is empty. This validation is handled specifically outside the validate,
+        // because the title ist not in the $request object, but inside the $request->post('title')
+        if (empty($title) || strlen($title) > 255) {
+            return response()->json(['message' => 'The title field is invalid.'], 422);
+        }
+
         $uploadedImages = [];
-        $title = $request->input('title');
 
         foreach ($request->file('files') as $file) {
             // Get the original filename and extension
