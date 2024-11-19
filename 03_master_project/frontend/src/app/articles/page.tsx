@@ -33,7 +33,7 @@ export default async function ArticlesPage() {
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6'>
         {data.map((article) => (
-          <Card key={article.id} className='p-6 h-56'>
+          <Card key={article.id} className='p-6 h-56 cursor-pointer'>
             <CardContent className='font-semibold'>{article.title}</CardContent>
           </Card>
         ))}

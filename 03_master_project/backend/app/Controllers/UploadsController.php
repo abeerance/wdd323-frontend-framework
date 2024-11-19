@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Image;
+use Illuminate\Support\Facades\Log;
 
 class UploadsController {
     function index(Request $request) {
@@ -16,15 +17,18 @@ class UploadsController {
     }
 
     function create(Request $request) {
+        Log::info($request->all());
         $user = Auth::user(); // Get the authenticated user
 
         // Validate that the input contains between 1 and 5 files
         $request->validate([
-            'files.*' => ['required', 'file', 'max:5120'], // Validate each file
-            'files' => ['required', 'array', 'max:5'], // Ensure there are at most 5 files
+            'title' => ['string', 'max:255'], // Validate title as required text
+            'files.*' => ['required', 'file', 'max:5120'], // Validate each file in the array
+            'files' => ['required', 'array', 'max:5'], // Ensure files is an array with at most 5 items
         ]);
 
         $uploadedImages = [];
+        $title = $request->input('title');
 
         foreach ($request->file('files') as $file) {
             // Get the original filename and extension
@@ -45,6 +49,7 @@ class UploadsController {
 
             // Save the file information in the database
             $image = Image::create([
+                'title' => $title, 
                 'pathname' => $pathname,
                 'user_id' => $user->id, // Associate the image with the user
             ]);

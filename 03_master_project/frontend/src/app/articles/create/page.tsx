@@ -62,6 +62,31 @@ export default function CreateArticlePage() {
       content: editorContent, // the current state of the editorContant
       image_id: imageId, // the ID of the uploaded image
     };
+
+    // now we send the payload to the backend via POST request in a API-Route-Handler
+    // 1. try to create an api-route-handler with the name create-article
+    // 2. inside that api-route-handler, we send the JSON to the route /api/articles
+    // 3. wenn die article creation nicht erfolgreich ist, sollte eine toast-message im catch erscheinen
+    // 4. wenn der Artikel kriert ist, dann gibt es einen toat.success und einen router push auf /articles
+    try {
+      // send the article data to the backend route-handler
+      const response = await fetch("/api/create-article", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      //parse the json from the server
+      await response.json().then(() => {
+        toast.success("Article created successfully", { position: "bottom-center" });
+        router.push("/articles");
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to create article", { position: "bottom-center" });
+    }
   };
 
   return (
