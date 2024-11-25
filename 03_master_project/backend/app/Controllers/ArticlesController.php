@@ -50,28 +50,42 @@ class ArticlesController {
     }
 
     function create(Request $request) {
-        // Convert content JSON object to string if it's an array
+        // Convert content JSON object to a string if it's an array
         if (is_array($request->input('content'))) {
             $request->merge([
                 'content' => json_encode($request->input('content')),
             ]);
         }
 
-        $payload = Article::validate($request);
+        // Validate request payload, including title, content, and optional image_id
+        $validatedData = $request->validate([
+            'title' => ['required', 'string', 'max:255'], // Validate title
+            'content' => ['required', 'json'], // Validate content as JSON
+            'image_id' => ['nullable', 'integer', 'exists:images,id'], // image_id must exist in images table if provided
+        ], [
+            'title.required' => 'The title field is required.',
+            'content.required' => 'The content field is required.',
+            'content.json' => 'The content must be valid JSON.',
+            'image_id.exists' => 'Invalid cover image ID.',
+        ]);
 
-        // Handle cover image validation as before
-        if ($request->has('image_id')) {
-            $coverImage = Auth::user()->images()->find($request->input('image_id'));
-
+        // Validate cover image ownership if image_id is provided
+        if (!empty($validatedData['image_id'])) {
+            $coverImage = Auth::user()->images()->find($validatedData['image_id']);
             if (!$coverImage) {
-                return response()->json(['error' => 'Invalid cover image ID.'], 422);
+                return response()->json(['error' => 'You do not have permission to use this cover image.'], 403);
             }
-
-            $payload['image_id'] = $coverImage->id;
         }
 
-        $article = Auth::user()->articles()->create($payload);
-        return $article;
+        // Create the article
+        $article = Auth::user()->articles()->create([
+            'title' => $validatedData['title'],
+            'content' => $validatedData['content'],
+            'image_id' => $validatedData['image_id'] ?? null, // Use image_id if provided, or null
+        ]);
+
+        // Respond with the created article
+        return response()->json(['article' => $article], 201);
     }
 
     function update(Request $request) {

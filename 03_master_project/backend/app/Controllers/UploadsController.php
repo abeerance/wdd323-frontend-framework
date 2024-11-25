@@ -10,22 +10,36 @@ use App\Models\Image;
 use Illuminate\Support\Facades\Log;
 
 class UploadsController {
-    function index(Request $request) {
-        $user = Auth::user();
-        $images = Image::where('user_id', $user->id)->get();
-        return response()->json($images);
+   function index(Request $request) {
+        // Validate the query parameter
+        $request->validate([
+            'image_id' => ['required', 'integer', 'exists:images,id'], // Ensure image_id exists in the database
+        ], [
+            'image_id.required' => 'The image_id query parameter is required.',
+            'image_id.integer' => 'The image_id must be an integer.',
+            'image_id.exists' => 'The specified image_id does not exist.',
+        ]);
+    
+        // Retrieve the image by ID from the database
+        $image = Image::findOrFail($request->query('image_id'));
+    
+        // Return the image details as a JSON response
+        return response()->json($image, 200);
     }
 
     function create(Request $request) {
         $user = Auth::user(); // Get the authenticated user
 
         $request->validate([
-            'files.*' => ['required', 'file', 'max:5120'], // Validate each file in the array
-            'files' => ['required', 'array', 'max:5'], // Ensure files is an array
+            'files.*' => ['required', 'file', 'max:10240'], // Validate each file in the array, max 10MB
+            'files' => ['required', 'array', 'max:5'], // Ensure files is an array, max 5 files
+        ], [
+            'files.*.max' => 'Each file may not exceed 10 MB.',
+            'files.max' => 'You may not upload more than 5 files.',
         ]);
 
         // FORMDATA: this is needed, so that we can access the title of the article
-        $title = $request->post('title'); 
+        $title = $request->post('title');
 
         // for example, if the formdata has a description key, we need to do it like this, so we can access the content of the key
         // $description = $request->post('description');
