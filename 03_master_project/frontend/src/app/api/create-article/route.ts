@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
     });
 
     const data = await response.json();
+
+    // if the response is not ok from the server, we can handle the error
+    // in the next.js server
+    if (!response.ok) {
+      return NextResponse.json({ message: data.message }, { status: response.status });
+    }
+
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error("Article creation failed: ", error);

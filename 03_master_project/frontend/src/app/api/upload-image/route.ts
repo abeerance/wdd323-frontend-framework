@@ -20,6 +20,8 @@ export async function POST(request: NextRequest) {
   // retrieve the request body
   const formData = await request.formData();
 
+  console.log("formData: ", formData);
+
   // now we try to communicate with the backend
   try {
     // send the request to the backend
@@ -32,9 +34,22 @@ export async function POST(request: NextRequest) {
     });
 
     const data = await response.json();
+
+    // (optional) handle errors
+    // if the response from the server is not ok, in some cases the response of the
+    // next.js server can be a 200, if you're not conditionally checking if the
+    // !response.ok,
+    // that's why we did an additional check here
+    if (!response.ok) {
+      return NextResponse.json({ message: data.message }, { status: response.status });
+    }
+
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.error("Image upload failed: ", error);
-    return NextResponse.json({ message: "Image upload failed" }, { status: 500 });
+    return NextResponse.json(
+      { message: "There was an error in the upload. Please ensure that the image is max. 8MB." },
+      { status: 400 }
+    );
   }
 }

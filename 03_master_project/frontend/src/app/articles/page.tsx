@@ -5,6 +5,7 @@ import { ArticleData } from "../page";
 import { PlusIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { LinkButton } from "@/components/buttons/link-button";
+import Link from "next/link";
 
 async function getUserArticles() {
   // get accessToken from the session
@@ -33,9 +34,11 @@ export default async function ArticlesPage() {
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6'>
         {data.map((article) => (
-          <Card key={article.id} className='p-6 h-56 cursor-pointer'>
-            <CardContent className='font-semibold'>{article.title}</CardContent>
-          </Card>
+          <Link key={article.id} href={`/article/${article.id}`}>
+            <Card key={article.id} className='p-6 h-56 cursor-pointer'>
+              <CardContent className='font-semibold'>{article.title}</CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </>

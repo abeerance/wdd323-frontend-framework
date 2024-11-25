@@ -17,11 +17,28 @@ export default function CreateArticlePage() {
   const [coverImage, setCoverImage] = useState<File | undefined>();
   // useRouter hook for routing
   const router = useRouter();
+  // define the maximum allowed size for the image file in MB
+  const MAX_IMAGE_SIZE_MB = 8;
 
   // function to handle uploading an image to the server
   const handleImageUpload = async () => {
     // early return if no coverImage is selected
     if (!coverImage) return;
+
+    // calculate the size of the image file in MB,
+    const fileSizeMb = coverImage.size / (1024 * 1024);
+    // check if the file size exceeds the maximum limit
+    if (fileSizeMb > MAX_IMAGE_SIZE_MB) {
+      toast.error(
+        `The image file size exceeds the maximum limit of ${MAX_IMAGE_SIZE_MB} MB. Please upload a smaller image`,
+        {
+          position: "bottom-center",
+        }
+      );
+
+      // stop further execution
+      throw new Error("Image file size exceeds the maximum limit");
+    }
 
     // prepare the file to be sent using FormData
     const formData = new FormData();
