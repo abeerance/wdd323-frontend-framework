@@ -23,7 +23,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: nu
   const data: ArticleData = await getArticleDetail(id);
 
   return (
-    <Modal title={data.title}>
+    <Modal
+      title={data.title}
+      contentClassName='w-4/5 max-w-3xl max-h-[600px] sm:max-h-[800px] overflow-y-auto'
+    >
       <ArticleDetail data={data} />
     </Modal>
   );

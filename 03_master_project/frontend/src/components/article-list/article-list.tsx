@@ -2,6 +2,7 @@ import dataFetch from "@/lib/data-fetch";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { ArticleData } from "@/app/page";
+import { TipTapViewer } from "../tiptap/tiptap-viewer";
 
 // simulate delay funciton
 function delay(ms: number) {
@@ -30,7 +31,9 @@ export default async function ArticleList() {
             <CardHeader>
               <CardTitle>{article.title}</CardTitle>
             </CardHeader>
-            <CardContent>{article.content}</CardContent>
+            <CardContent>
+              <TipTapViewer content={article.content} />
+            </CardContent>
           </Card>
         </Link>
       ))}

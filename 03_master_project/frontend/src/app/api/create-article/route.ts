@@ -18,6 +18,23 @@ export async function POST(request: NextRequest) {
   // retrieve the request body
   const body = await request.json();
 
+  /* in this part, the body is still a json object like:
+  {
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "asdasdasdasdasdd"
+        }
+      ]
+    }
+  ]
+}
+  */
+
   // now we try to communicate with the backend
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/api/articles`, {
@@ -27,6 +44,9 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${session.accessToken}`,
       },
       body: JSON.stringify(body),
+      /* here, the stringify converts the json object into a string, in saves it like this in the backend
+      "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"asdasdasdasdad\"}]}]}"
+      */
     });
 
     const data = await response.json();

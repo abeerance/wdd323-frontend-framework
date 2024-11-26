@@ -15,9 +15,17 @@ interface ModalProps {
   title: string;
   description?: string;
   children: ReactNode;
+  overlayClassName?: string;
+  contentClassName?: string;
 }
 
-export const Modal = ({ title, description, children }: ModalProps) => {
+export const Modal = ({
+  title,
+  description,
+  children,
+  overlayClassName,
+  contentClassName,
+}: ModalProps) => {
   // this router is needed so that we can handle whenever the user
   // clicks the close button or clicks somewhere outside the modal range
   // since we are on a different route, we need to use the router to handle this
@@ -30,8 +38,8 @@ export const Modal = ({ title, description, children }: ModalProps) => {
 
   return (
     <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
-      <DialogOverlay>
-        <DialogContent>
+      <DialogOverlay className={overlayClassName}>
+        <DialogContent className={contentClassName}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             {description && <DialogDescription>{description}</DialogDescription>}

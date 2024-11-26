@@ -60,7 +60,7 @@ class ArticlesController {
         // Validate request payload, including title, content, and optional image_id
         $validatedData = $request->validate([
             'title' => ['required', 'string', 'max:255'], // Validate title
-            'content' => ['required', 'json'], // Validate content as JSON
+            'content' => ['required', 'string'], // Validate content as JSON
             'image_id' => ['nullable', 'integer', 'exists:images,id'], // image_id must exist in images table if provided
         ], [
             'title.required' => 'The title field is required.',

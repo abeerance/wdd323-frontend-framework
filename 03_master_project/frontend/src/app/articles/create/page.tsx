@@ -54,6 +54,13 @@ export default function CreateArticlePage() {
 
       // parse the JSON response from the server
       const data = await response.json();
+
+      // check if the upload failed (based on response status)
+      if (!response.ok) {
+        toast.error(data.message || "Image upload failed", { position: "bottom-center" });
+        throw new Error(data.message || "Image upload failed");
+      }
+
       return data; // return the uploaded image details
     } catch (error) {
       console.error(error);
@@ -68,11 +75,20 @@ export default function CreateArticlePage() {
       alert("Title and content are required");
     }
 
-    // call the handleImageUpload function
-    const uploadedImageResponse = await handleImageUpload();
+    // initialize the image ID as null
+    let imageId = null;
 
-    // extract the image ID from the uploaded image data
-    const imageId = uploadedImageResponse?.images[0].id;
+    try {
+      // call the handleImageUpload function
+      const uploadedImageResponse = await handleImageUpload();
+
+      // extract the image ID from the uploaded image data
+      // safely access the iamge ID from the uploadedImageResponse
+      imageId = uploadedImageResponse?.images[0].id || null;
+    } catch (error) {
+      console.error("Image upload failed: ", error);
+      return;
+    }
 
     // create a payload to send to the backend server
     const payload = {
@@ -95,6 +111,11 @@ export default function CreateArticlePage() {
         },
         body: JSON.stringify(payload),
       });
+
+      if (!response.ok) {
+        toast.error("Article creation failed", { position: "bottom-center" });
+        return;
+      }
 
       //parse the json from the server
       await response.json().then(() => {

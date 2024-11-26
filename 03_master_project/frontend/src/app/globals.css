@@ -79,3 +79,11 @@ body {
 .editor li {
   margin-bottom: 0.15rem;
 }
+
+.image-container {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 16px;
+  margin: 24px 0;
+}
