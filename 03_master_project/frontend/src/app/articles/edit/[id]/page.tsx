@@ -1,11 +1,13 @@
-import dataFetch, { dataFetchWithToken } from "@/lib/data-fetch";
-import { ArticleData } from "@/app/page";
-import { getServerSession } from "next-auth";
-import { authConfig } from "@/auth";
-import { ModalArticleWrapper } from "@/components/modal/modal-article-wrapper";
-
 // this is needed for the dynamic route so that we can fetch
 // a single article from the backend
+
+import { ArticleData } from "@/app/page";
+import { authConfig } from "@/auth";
+import { EditArticle } from "@/components/edit-article/edit-article";
+import dataFetch, { dataFetchWithToken } from "@/lib/data-fetch";
+import { getServerSession } from "next-auth";
+import { notFound } from "next/navigation";
+
 // with the help of an id which we will get from the router
 async function getArticleDetail(id: number) {
   // here we call the dataFetch function from the lib
@@ -24,9 +26,7 @@ async function getCurrentUser() {
   return await dataFetchWithToken(`${process.env.BACKEND_URL}/api/user`, session.accessToken);
 }
 
-// the params are being fetched from the router
-// in this example we are on the route http://localhost:3000/article/1
-export default async function ArticlePage({ params }: { params: Promise<{ id: number }> }) {
+export default async function EditArticlePage({ params }: { params: Promise<{ id: number }> }) {
   // here we await the id from the params
   // we need to await it, so there is no hydration error
   const { id } = await params;
@@ -37,5 +37,5 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: nu
   // here we get the current user
   const user = await getCurrentUser();
 
-  return <ModalArticleWrapper data={data} userId={user?.id} />;
+  return user.id === data.user_id ? <EditArticle data={data} /> : notFound();
 }

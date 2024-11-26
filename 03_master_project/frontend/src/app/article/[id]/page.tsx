@@ -1,6 +1,8 @@
-import dataFetch from "@/lib/data-fetch";
+import dataFetch, { dataFetchWithToken } from "@/lib/data-fetch";
 import { ArticleDetail } from "./article-detail";
 import { ArticleData } from "@/app/page";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/auth";
 
 // this is needed for the dynamic route so that we can fetch
 // a single article from the backend
@@ -9,6 +11,17 @@ async function getArticleDetail(id: number) {
   // here we call the dataFetch function from the lib
   // to get a single article from the backend
   return await dataFetch(`http://127.0.0.1:8000/api/articles?id=${id}`);
+}
+
+// here we get the current logged in user
+async function getCurrentUser() {
+  const session = await getServerSession(authConfig);
+
+  if (!session || !session.accessToken) {
+    return null;
+  }
+
+  return await dataFetchWithToken(`${process.env.BACKEND_URL}/api/user`, session.accessToken);
 }
 
 // the params are being fetched from the router
@@ -21,9 +34,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: nu
   // and we pass the destructured params to it -> id
   const data: ArticleData = await getArticleDetail(id);
 
+  // here we get the current user
+  const user = await getCurrentUser();
+
   return (
     <div>
-      <ArticleDetail data={data} />
+      <ArticleDetail data={data} userId={user?.id} />
     </div>
   );
 }

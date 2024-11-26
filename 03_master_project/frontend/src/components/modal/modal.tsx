@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,8 @@ interface ModalProps {
   children: ReactNode;
   overlayClassName?: string;
   contentClassName?: string;
+  openModal?: boolean;
+  setOpenModal?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Modal = ({
@@ -25,6 +27,8 @@ export const Modal = ({
   children,
   overlayClassName,
   contentClassName,
+  openModal = true,
+  setOpenModal,
 }: ModalProps) => {
   // this router is needed so that we can handle whenever the user
   // clicks the close button or clicks somewhere outside the modal range
@@ -32,12 +36,16 @@ export const Modal = ({
   const router = useRouter();
 
   const handleOpenChange = () => {
-    // here we tell the router to go back in the router history by one
-    router.back();
+    if (setOpenModal) {
+      setOpenModal(false);
+    } else {
+      // here we tell the router to go back in the router history by one
+      router.back();
+    }
   };
 
   return (
-    <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
+    <Dialog defaultOpen={openModal} open={openModal} onOpenChange={handleOpenChange}>
       <DialogOverlay className={overlayClassName}>
         <DialogContent className={contentClassName}>
           <DialogHeader>
