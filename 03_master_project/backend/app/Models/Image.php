@@ -14,4 +14,6 @@ class Image extends Model
         'pathname',
         'user_id',
     ];
+
+
 }

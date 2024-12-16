@@ -1,8 +1,6 @@
 import dataFetch from "@/lib/data-fetch";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { ArticleData } from "@/app/page";
-import { TipTapViewer } from "../tiptap/tiptap-viewer";
+
+import { ArticleListPreview } from "./article-list-preview";
 
 // simulate delay funciton
 function delay(ms: number) {
@@ -21,22 +19,5 @@ async function getArticles() {
 export default async function ArticleList() {
   const articles = await getArticles();
 
-  return (
-    <>
-      {articles.map((article: ArticleData) => (
-        // here we use the Link Component from next.js
-        // to enable routing whenever we click on an article
-        <Link key={article.id} href={`/article/${article.id}`} className='w-full'>
-          <Card>
-            <CardHeader>
-              <CardTitle>{article.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TipTapViewer content={article.content} />
-            </CardContent>
-          </Card>
-        </Link>
-      ))}
-    </>
-  );
+  return <ArticleListPreview articles={articles} />;
 }
