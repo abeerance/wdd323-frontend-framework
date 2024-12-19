@@ -16,7 +16,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::get('/articles', [ArticlesController::class, 'index']);
 Route::get('/comments', [CommentsController::class, 'index']);
 Route::get('/tags', [TagsController::class, 'index']);
-Route::get('/uploads',[UploadsController::class,'index']);
+Route::get('/uploads', [UploadsController::class, 'index']);
 
 // user endpoints
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
   Route::put('/tags/assign', [TagsController::class, 'assign']);
 
   Route::post('/uploads', [UploadsController::class, 'create']);
+  Route::patch('/uploads', [UploadsController::class, 'update']);
   Route::delete('/uploads/{id}', [UploadsController::class, 'destroy']);
 
   Route::post('/mails/send', [MailsController::class, 'send']);

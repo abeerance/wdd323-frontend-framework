@@ -18,23 +18,6 @@ export async function PATCH(request: NextRequest) {
   // retrieve the request body
   const body = await request.json();
 
-  /* in this part, the body is still a json object like:
-  {
-  "type": "doc",
-  "content": [
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "asdasdasdasdasdd"
-        }
-      ]
-    }
-  ]
-}
-  */
-
   // now we try to communicate with the backend
   try {
     const response = await fetch(`${process.env.BACKEND_URL}/api/articles`, {

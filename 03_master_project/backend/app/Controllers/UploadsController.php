@@ -9,8 +9,10 @@ use Illuminate\Support\Str;
 use App\Models\Image;
 use Illuminate\Support\Facades\Log;
 
-class UploadsController {
-   function index(Request $request) {
+class UploadsController
+{
+    function index(Request $request)
+    {
         // Validate the query parameter
         $request->validate([
             'image_id' => ['required', 'integer', 'exists:images,id'], // Ensure image_id exists in the database
@@ -19,15 +21,16 @@ class UploadsController {
             'image_id.integer' => 'The image_id must be an integer.',
             'image_id.exists' => 'The specified image_id does not exist.',
         ]);
-    
+
         // Retrieve the image by ID from the database
         $image = Image::findOrFail($request->query('image_id'));
-    
+
         // Return the image details as a JSON response
         return response()->json($image, 200);
     }
 
-    function create(Request $request) {
+    function create(Request $request)
+    {
         $user = Auth::user(); // Get the authenticated user
 
         $request->validate([
@@ -71,7 +74,7 @@ class UploadsController {
 
             // Save the file information in the database
             $image = Image::create([
-                'title' => $title, 
+                'title' => $title,
                 'pathname' => $pathname,
                 'user_id' => $user->id, // Associate the image with the user
             ]);
@@ -82,7 +85,68 @@ class UploadsController {
         return response()->json(['images' => $uploadedImages], 201);
     }
 
-    function destroy(Request $request, $id) {
+    function update(Request $request)
+    {
+        $user = Auth::user(); // Get the authenticated user
+
+        // Debug: Log request content
+        Log::info('Request Inputs:', $request->all());
+        Log::info('Request Raw Content:', $request->getContent());
+        Log::info('Uploaded Files:', $request->file('files'));
+
+        // Check if files are present in the request
+        if (!$request->hasFile('files')) {
+            Log::error('No files were provided in the request.');
+            return response()->json(['message' => 'No files were uploaded'], 400);
+        }
+
+        // Validate request inputs
+        $validatedData = $request->validate([
+            'files.*' => ['required', 'file', 'max:10240'], // Validate each file (max 10MB)
+            'files' => ['required', 'array', 'max:5'],      // Ensure files is an array, max 5 files
+        ], [
+            'files.*.required' => 'No files were uploaded',
+            'files.*.file' => 'Invalid file format',
+            'files.*.max' => 'File exceeds the maximum size of 10 MB',
+            'files.max' => 'You may not upload more than 5 files.',
+        ]);
+
+        $uploadedImages = [];
+
+        // Process uploaded files
+        foreach ($request->file('files') as $file) {
+            $originalFilename = $file->getClientOriginalName();
+            $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+
+            // Generate unique filename
+            $uniqueFilename = $filename . '_' . Str::random(16) . '.' . $extension;
+            $pathname = 'uploads/' . $user->id . '/' . $uniqueFilename;
+
+            // Store file
+            Storage::putFileAs(
+                'uploads/' . $user->id,
+                $file,
+                $uniqueFilename
+            );
+
+            Log::info("Stored file: {$pathname}");
+
+            // Save file information in the database
+            $image = Image::create([
+                'title' => $originalFilename,
+                'pathname' => $pathname,
+                'user_id' => $user->id,
+            ]);
+
+            $uploadedImages[] = $image;
+        }
+
+        return response()->json(['images' => $uploadedImages], 200);
+    }
+
+    function destroy(Request $request, $id)
+    {
         $user = Auth::user(); // Get the authenticated user
 
         // Find the image by its ID and ensure it belongs to the authenticated user
