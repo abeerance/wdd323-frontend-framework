@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Rocket } from "lucide-react";
 import Image from "next/image";
+import { uploadImage } from "@/utils/image-upload";
 
 interface EditArticleProps {
   data: ArticleData;
@@ -25,12 +26,30 @@ export const EditArticle = ({ data }: EditArticleProps) => {
   const [newImage, setNewImage] = useState<File | null>(null); // For newly selected image
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // define the maximum allowed size for the image file in MB
+  const MAX_IMAGE_SIZE_MB = 8;
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setNewImage(file); // Save the file for upload later
       setImagePreview(URL.createObjectURL(file)); // Show preview of the new image
+    }
+  };
+
+  // function to handle uploading an image to the server
+  const handleImageUpload = async () => {
+    if (!newImage) return;
+
+    const result = await uploadImage({
+      file: newImage,
+      title,
+      maxFileSizeMb: MAX_IMAGE_SIZE_MB,
+    });
+
+    if (result) {
+      console.log("Image uploaded successfully:", result);
+      return result;
     }
   };
 
@@ -45,22 +64,34 @@ export const EditArticle = ({ data }: EditArticleProps) => {
     // If there's a new image selected, handle image upload
     if (newImage) {
       const formData = new FormData();
-      formData.append("files[]", newImage);
       formData.append("title", title);
+      formData.append("files[]", newImage);
 
       try {
-        const imageResponse = await fetch("/api/upload-image", {
-          method: "POST",
-          body: formData,
-        });
+        // Delete the old image if there is one
+        if (data.image_id && newImage) {
+          await fetch("/api/delete-image", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: data.cover_image.id,
+            }),
+          });
+        }
 
-        if (!imageResponse.ok) {
+        // call the handleImageUpload function
+        const uploadedImageResponse = await handleImageUpload();
+
+        // extract the image ID from the uploaded image data
+        // safely access the iamge ID from the uploadedImageResponse
+        imageId = uploadedImageResponse?.images[0].id || null;
+
+        if (!uploadedImageResponse.ok) {
           toast.error("Failed to upload image", { position: "bottom-center" });
           return;
         }
-
-        const uploadedImage = await imageResponse.json();
-        imageId = uploadedImage.images[0]?.id || null;
       } catch (error) {
         console.error(error);
         toast.error("Failed to upload image", { position: "bottom-center" });
