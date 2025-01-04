@@ -21,7 +21,9 @@ export const EditArticle = ({ data }: EditArticleProps) => {
   );
   const [title, setTitle] = useState<string>(data.title);
   const [imagePreview, setImagePreview] = useState<string>(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/${data.cover_image?.pathname}` || "" // Assuming `cover_image.pathname` contains the database image URL
+    data.cover_image?.pathname
+      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${data.cover_image.pathname}`
+      : ""
   );
   const [newImage, setNewImage] = useState<File | null>(null); // For newly selected image
   const router = useRouter();
@@ -48,7 +50,6 @@ export const EditArticle = ({ data }: EditArticleProps) => {
     });
 
     if (result) {
-      console.log("Image uploaded successfully:", result);
       return result;
     }
   };
@@ -84,14 +85,14 @@ export const EditArticle = ({ data }: EditArticleProps) => {
         // call the handleImageUpload function
         const uploadedImageResponse = await handleImageUpload();
 
-        // extract the image ID from the uploaded image data
-        // safely access the iamge ID from the uploadedImageResponse
-        imageId = uploadedImageResponse?.images[0].id || null;
-
-        if (!uploadedImageResponse.ok) {
+        if (!uploadedImageResponse) {
           toast.error("Failed to upload image", { position: "bottom-center" });
           return;
         }
+
+        // extract the image ID from the uploaded image data
+        // safely access the iamge ID from the uploadedImageResponse
+        imageId = uploadedImageResponse?.images[0].id || null;
       } catch (error) {
         console.error(error);
         toast.error("Failed to upload image", { position: "bottom-center" });
