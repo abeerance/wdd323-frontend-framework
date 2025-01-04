@@ -21,6 +21,7 @@ async function getArticles() {
 export default async function ArticleList() {
   const articles = await getArticles();
 
+  console.log(articles);
   return (
     <>
       {articles.map((article: ArticleData) => (

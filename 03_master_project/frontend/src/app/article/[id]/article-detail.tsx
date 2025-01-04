@@ -34,7 +34,7 @@ export function ArticleDetail({ data, userId, setOpenModal }: ArticleDataProps) 
           className='max-w-[200px]'
           onClick={() => {
             router.push(`/articles/edit/${data.id}`);
-            if (setOpenModal) setOpenModal(false);
+            setOpenModal?.(false);
           }}
         >
           Edit article
